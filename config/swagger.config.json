@@ -22,7 +22,7 @@
     "produces": ["application/json"],
 
     "paths": {
-        "/users": {
+        "/user": {
           "get": {
             "tags": ["Users"],
             "summary": "Get all users in system",

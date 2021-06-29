@@ -7,10 +7,10 @@ const productSchema =  mongoose.Schema({
         ref: 'category',
         required: true
     },
-    title: { type: String, required: true },
-    description: String,
-    price: Number,
-    rating: Number
+    title: { type: String, required: true, unique: true },
+    description: { type: String, maxlength: 1000 },
+    price: { type: Number, required: true },
+    rating: { type: Number, default: 0 }
 }, { timestamps: true });
 
 module.exports = mongoose.model('product', productSchema);
