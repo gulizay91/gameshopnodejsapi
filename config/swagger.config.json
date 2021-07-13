@@ -43,7 +43,7 @@
           "post": {
             "tags": ["Users"],
             "parameters": [{
-              "name": "loginUserRequest",
+              "name": "LoginUserRequest",
               "in": "body",
               "required": true,
               "schema": {
@@ -91,6 +91,15 @@
           "get": {
             "tags": ["Users"],
             "summary": "Get user by Id",
+            "parameters": [
+              {
+                "name": "id",
+                "in": "path",
+                "description": "ID of user to fetch",
+                "required": true,
+                "type": "string"
+              }
+            ],
             "responses": {
               "200": {
                 "description": "OK",
@@ -106,6 +115,15 @@
           "get": {
             "tags": ["Products"],
             "summary": "Get product by Id",
+            "parameters": [
+              {
+                "name": "id",
+                "in": "path",
+                "description": "ID of product to fetch",
+                "required": true,
+                "type": "string"
+              }
+            ],
             "responses": {
               "200": {
                 "description": "OK",
@@ -120,6 +138,17 @@
           "post": {
             "tags": ["Products"],
             "summary": "Get all products in system",
+            "parameters": [
+              {
+                "name": "ProductRequest",
+                "in": "body",
+                "description": "Filtered List for Products to fetch",
+                "required": false,
+                "schema": {
+                  "$ref": "#/definitions/ProductRequest"
+                }
+              }
+            ],
             "responses": {
               "200": {
                 "description": "OK",
@@ -167,6 +196,10 @@
             }
           }
         },
+        "Users": {
+          "type": "array",
+          "$ref": "#/definitions/User"
+        },
         "RegisterUser": {
           "required": ["username", "password", "email"],
           "properties": {
@@ -212,6 +245,7 @@
             }
           }
         },
+
         "Product": {
           "required": ["_id", "categoryId"],
           "properties": {
@@ -236,13 +270,26 @@
             }
           }
         },
-        "Users": {
-          "type": "array",
-          "$ref": "#/definitions/User"
-        },
         "Products": {
           "type": "array",
           "$ref": "#/definitions/Product"
+        },
+        "ProductRequest": {
+          "required": [""],
+          "properties": {
+            "categoryId": {
+                "type": "string"
+            },
+            "page": {
+              "type": "number",
+              "default": 1
+            },
+            "limit": {
+              "type": "number",
+              "default": 10
+            }
+          }
         }
+
       }
   }
