@@ -66,7 +66,7 @@ const userLogin = async (req, res, next) => {
             //console.log(existUser)
             res.status(200).json({
                 message: "Auth successful",
-                userDetails: {
+                userDetail: {
                     id: existUser._id,
                     username: existUser.username,
                     email: existUser.email,

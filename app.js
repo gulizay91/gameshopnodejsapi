@@ -7,6 +7,7 @@ const checkAuth = require('./middleware/auth.middleware');
 const swaggerUi = require('swagger-ui-express'),
 swaggerDocument = require('./config/swagger.config.json');
 
+
 // Import Configs
 require('dotenv').config({
     path: './config/index.env'
@@ -28,9 +29,9 @@ app.use(
     swaggerUi.setup(swaggerDocument)
   );
 
-app.use('/user', userRouter);
-app.use('/category', checkAuth, categoryRouter);
-app.use('/product', checkAuth, productRouter);
+app.use('/users', userRouter);
+app.use('/categories', checkAuth, categoryRouter);
+app.use('/products', checkAuth, productRouter);
 
 app.use(errorHandling);
 

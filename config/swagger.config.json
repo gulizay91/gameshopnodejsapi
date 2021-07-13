@@ -11,26 +11,134 @@
     },
     "host": "localhost:3000",
     "basePath": "/",
+    "securityDefinitions": {
+      "Jwt": {
+          "type": "apiKey",
+          "name": "Authorization",
+          "in": "header"
+      }
+    },
+    "security": [{ "Jwt":[] }],
     "tags": [
       {
         "name": "Users",
         "description": "API for users in the system"
+      },
+      {
+        "name": "Products",
+        "description": "API for products in the system"
+      },
+      {
+        "name": "Categories",
+        "description": "API for categories in the system"
       }
     ],
-    "schemes": ["http"],
+    "schemes": ["http", "https"],
     "consumes": ["application/json"],
     "produces": ["application/json"],
 
     "paths": {
-        "/user": {
-          "get": {
+        
+        "/users/login": {
+          "post": {
             "tags": ["Users"],
-            "summary": "Get all users in system",
+            "parameters": [{
+              "name": "loginUserRequest",
+              "in": "body",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/LoginUserRequest"
+              }
+            }
+          ],
+            "summary": "User loggin and return token",
             "responses": {
               "200": {
                 "description": "OK",
                 "schema": {
-                  "$ref": "#/definitions/Users"
+                  "$ref": "#/definitions/LoginUserResponse"
+                }
+              }
+            }
+          }
+        },
+        "/users/signup": {
+          "post": {
+            "tags": ["Users"],
+            "summary": "Register User",
+            "parameters": [
+              {
+                "name": "user",
+                "in": "body",
+                "description": "User to add to the users",
+                "required": true,
+                "schema": {
+                  "$ref": "#/definitions/RegisterUser"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": {
+                  "$ref": "#/definitions/User"
+                }
+              }
+            }
+          }
+        },
+        "/users/{id}": {
+          "get": {
+            "tags": ["Users"],
+            "summary": "Get user by Id",
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": {
+                  "$ref": "#/definitions/User"
+                }
+              }
+            }
+          }
+        },
+
+        "/products/{id}": {
+          "get": {
+            "tags": ["Products"],
+            "summary": "Get product by Id",
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": {
+                  "$ref": "#/definitions/Product"
+                }
+              }
+            }
+          }
+        },
+        "/products": {
+          "post": {
+            "tags": ["Products"],
+            "summary": "Get all products in system",
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": {
+                  "$ref": "#/definitions/Products"
+                }
+              }
+            }
+          }
+        },
+        "/products/save": {
+          "post": {
+            "tags": ["Products"],
+            "summary": "Save new product",
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": {
+                  "$ref": "#/definitions/Product"
                 }
               }
             }
@@ -42,11 +150,14 @@
           "required": ["_id"],
           "properties": {
             "_id": {
-              "type": "integer",
+              "type": "string",
               "uniqueItems": true
             },
             "username": {
                 "type": "string"
+            },
+            "email": {
+              "type": "string"
             },
             "firstName": {
                 "type": "string"
@@ -56,9 +167,82 @@
             }
           }
         },
+        "RegisterUser": {
+          "required": ["username", "password", "email"],
+          "properties": {
+            "username": {
+                "type": "string"
+            },
+            "password": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            },
+            "firstName": {
+                "type": "string"
+            },
+            "lastName": {
+              "type": "string"
+            }
+          }
+        },
+        "LoginUserRequest" : {
+          "required": ["email", "password"],
+          "properties": {
+            "email": {
+                "type": "string"
+            },
+            "password": {
+              "type": "string"
+            }
+          }
+        },
+        "LoginUserResponse": {
+          "properties": {
+            "userDetail": {
+              "type": "object",
+              "$ref": "#/definitions/User"
+            },
+            "message": {
+                "type": "string"
+            },
+            "token": {
+                "type": "string"
+            }
+          }
+        },
+        "Product": {
+          "required": ["_id", "categoryId"],
+          "properties": {
+            "_id": {
+              "type": "string",
+              "uniqueItems": true
+            },
+            "categoryId": {
+              "type": "string"
+            },
+            "title": {
+                "type": "string"
+            },
+            "description": {
+                "type": "string"
+            },
+            "price": {
+              "type": "number"
+            },
+            "rating": {
+              "type": "number"
+            }
+          }
+        },
         "Users": {
           "type": "array",
           "$ref": "#/definitions/User"
+        },
+        "Products": {
+          "type": "array",
+          "$ref": "#/definitions/Product"
         }
       }
   }
