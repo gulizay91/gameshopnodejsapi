@@ -1,12 +1,9 @@
 const router = require('express').Router();
 const categoryControllers = require('../controllers/category.controllers');
+const checkAuth = require('../middleware/auth.middleware');
 
-router.get('', (req, res) => {
-    res.send("categories");
-});
-
-router.get('/:id', categoryControllers.getCategory);
-router.post('/', categoryControllers.getCategories);
-router.post('/save', categoryControllers.categorySave);
+router.get('/:id', categoryControllers.categoryGet);
+router.post('/', categoryControllers.categoryGetAll);
+router.post('/save', checkAuth, categoryControllers.categorySave);
 
 module.exports = router;

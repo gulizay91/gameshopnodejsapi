@@ -30,8 +30,8 @@ app.use(
   );
 
 app.use('/users', userRouter);
-app.use('/categories', checkAuth, categoryRouter);
-app.use('/products', checkAuth, productRouter);
+app.use('/categories', categoryRouter);
+app.use('/products', productRouter);
 
 app.use(errorHandling);
 

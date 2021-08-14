@@ -1,48 +1,49 @@
-const Category = require('../models/category');
+const Category = require('../models/entities/category');
+const ServiceResult = require('../models/exchanges/serviceResult');
 
-const getCategory = async (req, res, next) => {
+const categoryGet = async (req, res, next) => {
+
+    const serviceResult = new ServiceResult();
     try {
         let data = await Category.findById(req.params.id)
-        res.status(200).json(data);
+        return res.json(serviceResult.ServiceResultSuccess(data));
     }
     catch(error) {
         console.log(error)
-        res.status(500).json({
-            message: error.toString()
-        });
+        return res.status(500).json(serviceResult.ServiceResultError(error.toString()));
     }
 }
 
-const getCategories = async (req, res, next) => {
+const categoryGetAll = async (req, res, next) => {
+
+    const serviceResult = new ServiceResult();
     try {
         let data = await Category.find({})
-        res.status(200).json(data);
+        return res.json(serviceResult.ServiceResultSuccess(data));
     }
     catch(error) {
         console.log(error)
-        res.status(500).json({
-            message: error.toString()
-        });
+        return res.status(500).json(serviceResult.ServiceResultError(error.toString()));
     }
 }
 
 const categorySave = async (req, res, next) => {
+
+    const serviceResult = new ServiceResult();
     const name = req.body.name;
     const description = req.body.description;
     try {
         const newCategory = new Category({ name: name, description: description });
         const saveCategory = await newCategory.save();
-        res.json( saveCategory );
+        return res.json(serviceResult.ServiceResultSuccess(saveCategory));
     } catch (error) {
         console.log(error)
-        res.status(500).json({
-            message: error.toString()
-        })
+        return res.status(500).json(serviceResult.ServiceResultError(error.toString()));
     }
 }
 
 module.exports = {
-    getCategory,
-    getCategories,
+    categoryGet,
+    categoryGetAll,
     categorySave
 };

@@ -1,20 +1,22 @@
-const Product = require('../models/product');
-
+const Product = require('../models/entities/product');
+const ServiceResult = require('../models/exchanges/serviceResult');
 
 const productGet = async (req, res) => {
+
+    const serviceResult = new ServiceResult();
     try {
         const productId = req.params.id;
         const product = await Product.findById(productId)
-        res.status(200).json({ product });
+        return res.json(serviceResult.ServiceResultSuccess(product));
     } catch (error) {
         console.log(error)
-        res.status(500).json({
-            message: error.toString()
-        })
+        return res.status(500).json(serviceResult.ServiceResultError(error.toString()));
     }
 }
 
 const productGetAll = async (req, res) => {
+
+    const serviceResult = new ServiceResult();
     try {
         const categoryId = req.body.categoryId;
         const filter = categoryId ? { categoryId } : {};
@@ -29,16 +31,16 @@ const productGetAll = async (req, res) => {
             .skip(pageOptions.page * pageOptions.limit)
             .limit(pageOptions.limit)
             .exec();
-        res.status(200).json({ products });
+        return res.json(serviceResult.ServiceResultSuccess(products));
     } catch (error) {
         console.log(error)
-        res.status(500).json({
-            message: error.toString()
-        })
+        return res.status(500).json(serviceResult.ServiceResultError(error.toString()));
     }
 }
 
 const productSave = async (req, res, next) => {
+
+    const serviceResult = new ServiceResult();
     try {
         const newProduct = new Product({
             categoryId: req.body.categoryId,
@@ -48,12 +50,10 @@ const productSave = async (req, res, next) => {
             rating: req.body.rating
         });
         const saveProduct = await newProduct.save();
-        res.json(saveProduct);
+        return res.json(serviceResult.ServiceResultSuccess(saveProduct));
     } catch (error) {
         console.log(error)
-        res.status(500).json({
-            message: error.toString()
-        })
+        return res.status(500).json(serviceResult.ServiceResultError(error.toString()));
     }
 }
 
