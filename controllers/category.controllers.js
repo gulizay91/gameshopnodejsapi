@@ -5,7 +5,7 @@ const categoryGet = async (req, res, next) => {
 
     const serviceResult = new ServiceResult();
     try {
-        let data = await Category.findById(req.params.id)
+        let data = await Category.findById(req.params.id);
         return res.json(serviceResult.ServiceResultSuccess(data));
     }
     catch(error) {
