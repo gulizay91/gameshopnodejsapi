@@ -11,10 +11,10 @@ class UserControllers {
     //     console.log("constructor with parameter")
     //     this._userService = userService;
     // };
-    
+
     userRegister = async (req, res, next) => {
-        const requestModel = new UserRegisterModel(req.body.username, 
-            req.body.password, req.body.email, 
+        const requestModel = new UserRegisterModel(req.body.username,
+            req.body.password, req.body.email,
             req.body.firstName, req.body.lastName);
         let response = await this._userService.UserRegister(requestModel);
         return res.status(response.statusCode).json(response);
@@ -36,11 +36,11 @@ class UserControllers {
 module.exports = UserControllers;
 
 /*
-const _userService = new UserService(); 
+const _userService = new UserService();
 
 const userRegister = async (req, res, next) => {
-    const requestModel = new UserRegisterModel(req.body.username, 
-        req.body.password, req.body.email, 
+    const requestModel = new UserRegisterModel(req.body.username,
+        req.body.password, req.body.email,
         req.body.firstName, req.body.lastName);
     let response = await _userService.UserRegister(requestModel);
     return res.status(response.statusCode).json(response);

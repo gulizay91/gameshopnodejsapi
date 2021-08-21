@@ -1,6 +1,8 @@
 const router = require('express').Router();
-const categoryControllers = require('../controllers/category.controllers');
 const checkAuth = require('../middleware/auth.middleware');
+
+const CategoryControllers = require('../controllers/category.controllers');
+const categoryControllers = new CategoryControllers();
 
 router.get('/:id', categoryControllers.categoryGet);
 router.post('/', categoryControllers.categoryGetAll);

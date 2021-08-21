@@ -1,49 +1,27 @@
-const Category = require('../models/entities/category');
-const ServiceResult = require('../models/exchanges/serviceResult');
+const CategoryService = require('../services/category.service');
+const CategorySaveModel = require('../models/exchanges/category/requestCategorySave');
 
-const categoryGet = async (req, res, next) => {
+class CategoryControllers {
+    constructor() {
+        this._categoryService = new CategoryService();
+    }
 
-    const serviceResult = new ServiceResult();
-    try {
-        let data = await Category.findById(req.params.id);
-        return res.json(serviceResult.ServiceResultSuccess(data));
+    categoryGet = async (req, res, next) => {
+        let response = await this._categoryService.CategoryGetById(req.params.id);
+        return res.status(response.statusCode).json(response);
     }
-    catch(error) {
-        console.log(error)
-        return res.status(500).json(serviceResult.ServiceResultError(error.toString()));
+
+    categoryGetAll = async (req, res, next) => {
+        let response = await this._categoryService.CategoryGetAll();
+        return res.status(response.statusCode).json(response);
     }
+
+    categorySave = async (req, res, next) => {
+        const requestModel = new CategorySaveModel(req.body._id, req.body.name, req.body.description);
+        let response = await this._categoryService.CategorySave(requestModel);
+        return res.status(response.statusCode).json(response);
+    }
+
 }
 
-const categoryGetAll = async (req, res, next) => {
-
-    const serviceResult = new ServiceResult();
-    try {
-        let data = await Category.find({})
-        return res.json(serviceResult.ServiceResultSuccess(data));
-    }
-    catch(error) {
-        console.log(error)
-        return res.status(500).json(serviceResult.ServiceResultError(error.toString()));
-    }
-}
-
-const categorySave = async (req, res, next) => {
-
-    const serviceResult = new ServiceResult();
-    const name = req.body.name;
-    const description = req.body.description;
-    try {
-        const newCategory = new Category({ name: name, description: description });
-        const saveCategory = await newCategory.save();
-        return res.json(serviceResult.ServiceResultSuccess(saveCategory));
-    } catch (error) {
-        console.log(error)
-        return res.status(500).json(serviceResult.ServiceResultError(error.toString()));
-    }
-}
-
-module.exports = {
-    categoryGet,
-    categoryGetAll,
-    categorySave
-};
+module.exports = CategoryControllers;

@@ -1,6 +1,7 @@
 
 const router = require('express').Router();
-const basketControllers = require('../controllers/basket.controllers');
+const BasketControllers = require('../controllers/basket.controllers');
+const basketControllers = new BasketControllers();
 
 router.get('/:user_id', basketControllers.basketGet);
 router.post('/save', basketControllers.basketSave);

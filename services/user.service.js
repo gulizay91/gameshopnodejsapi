@@ -4,12 +4,10 @@ const User = require('../models/entities/user');
 const ServiceResult = require('../models/exchanges/serviceResult');
 const { ResponseAuth, UserDetail } = require('../models/exchanges/user/responseAuth');
 
-class UserService
-{
-    constructor() {};
+class UserService {
+    constructor() { };
 
-    async UserRegister(userRegisterModel)
-    {
+    async UserRegister(userRegisterModel) {
         const serviceResult = new ServiceResult();
         try {
             const hash = await bcrypt.hash(userRegisterModel.password, 10);
@@ -25,7 +23,7 @@ class UserService
                     lastName: userRegisterModel.lastName
                 });
                 const saveUser = await newUser.save();
-                
+
                 const token = jwt.sign(
                     {
                         id: saveUser._id,
@@ -42,15 +40,14 @@ class UserService
                 const responseAuth = new ResponseAuth(saveUser, token);
                 return serviceResult.ServiceResultSuccess(responseAuth, "User register success.");
             }
-    
+
         } catch (error) {
             console.log(error)
             return serviceResult.ServiceResultError(error.toString());
         }
     }
 
-    async UserLogin(userLoginModel)
-    {
+    async UserLogin(userLoginModel) {
         const serviceResult = new ServiceResult();
         try {
             const email = userLoginModel.email;
@@ -58,14 +55,13 @@ class UserService
             if (!existUser) {
                 return serviceResult.ServiceResultError("Auth failed: Email not found probably", 401);
             }
-            
+
             const matchResult = await bcrypt.compare(userLoginModel.password, existUser.password);
             if (!matchResult) {
                 //console.log(matchResult)
                 return serviceResult.ServiceResultError("Auth failed", 401);
             }
-            else
-            {
+            else {
                 const token = jwt.sign(
                     {
                         id: existUser._id,
@@ -79,7 +75,7 @@ class UserService
                         expiresIn: "1d",
                     }
                 );
-                
+
                 const userDetail = new UserDetail(existUser._id, existUser.username, existUser.email, existUser.firstName, existUser.lastName)
                 const responseAuth = new ResponseAuth(userDetail, token);
                 return serviceResult.ServiceResultSuccess(responseAuth);
@@ -90,8 +86,7 @@ class UserService
         }
     }
 
-    async UserGetById(userId)
-    {
+    async UserGetById(userId) {
         const serviceResult = new ServiceResult();
         try {
             const user = await User.findById(userId);

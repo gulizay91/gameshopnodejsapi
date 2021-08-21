@@ -2,7 +2,7 @@ const Product = require('../models/entities/product');
 const ServiceResult = require('../models/exchanges/serviceResult');
 
 class ProductService {
-    constructor() {};
+    constructor() { };
 
     ProductGetById = async (productId) => {
 
@@ -22,12 +22,12 @@ class ProductService {
         try {
             const categoryId = productListRequestModel.categoryId;
             const filter = categoryId ? { categoryId } : {};
-    
+
             var pageOptions = {
                 page: parseInt(productListRequestModel.page) - 1 || 0,
                 limit: parseInt(productListRequestModel.limit) || 10
             }
-    
+
             const products = await Product.find(filter)
                 .sort({ title: 1 })
                 .skip(pageOptions.page * pageOptions.limit)
