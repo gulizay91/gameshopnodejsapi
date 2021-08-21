@@ -25,7 +25,7 @@ app.use(express.json());
 app.use(logger);
 app.use(cors);
 app.use(
-    '/api-docs',
+    '/swagger',
     swaggerUi.serve, 
     swaggerUi.setup(swaggerDocument)
   );
@@ -38,7 +38,7 @@ app.use('/baskets', checkAuth, basketRouter);
 app.use(errorHandling);
 
 app.listen(process.env.PORT || 3000, () => {
-    console.log(process.env.API_URL + ":" + process.env.PORT +" adresine gelen istekler dinleniyor...");
+    console.log(process.env.API_URL + ":" + process.env.PORT + " adresine gelen istekler dinleniyor...");
 });
 
 app.get('/', (req, res) => {

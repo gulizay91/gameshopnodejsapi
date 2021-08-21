@@ -1,7 +1,8 @@
 
 const router = require('express').Router();
-const productControllers = require('../controllers/product.controllers');
 const checkAuth = require('../middleware/auth.middleware');
+const ProductControllers = require('../controllers/product.controllers');
+const productControllers = new ProductControllers();
 
 router.get('/:id', productControllers.productGet);
 router.post('/', productControllers.productGetAll);

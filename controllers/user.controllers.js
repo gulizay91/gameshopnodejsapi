@@ -1,104 +1,62 @@
-const bcrypt = require('bcrypt');
-const User = require('../models/entities/user');
-const ServiceResult = require('../models/exchanges/serviceResult');
-const { ResponseAuth, UserDetail } = require('../models/exchanges/user/responseAuth');
-const jwt = require('jsonwebtoken');
-//const { response } = require('express');
+const UserRegisterModel = require('../models/exchanges/user/requestUserRegister');
+const UserLoginModel = require('../models/exchanges/user/requestUserLogin');
+const UserService = require('../services/user.service');
+
+class UserControllers {
+    constructor() {
+        //console.log("constructor no parameter")
+        this._userService = new UserService();
+    };
+    // constructor(userService) {
+    //     console.log("constructor with parameter")
+    //     this._userService = userService;
+    // };
+    
+    userRegister = async (req, res, next) => {
+        const requestModel = new UserRegisterModel(req.body.username, 
+            req.body.password, req.body.email, 
+            req.body.firstName, req.body.lastName);
+        let response = await this._userService.UserRegister(requestModel);
+        return res.status(response.statusCode).json(response);
+    }
+
+    userLogin = async (req, res, next) => {
+        const requestModel = new UserLoginModel(req.body.email, req.body.password);
+        let response = await this._userService.UserLogin(requestModel);
+        return res.status(response.statusCode).json(response);
+    }
+
+    userGet = async (req, res) => {
+        let response = await this._userService.UserGetById(req.params.id);
+        return res.status(response.statusCode).json(response);
+    }
+
+}
+
+module.exports = UserControllers;
+
+/*
+const _userService = new UserService(); 
 
 const userRegister = async (req, res, next) => {
-
-    const serviceResult = new ServiceResult();
-    try {
-        const hash = await bcrypt.hash(req.body.password, 10);
-        if (!hash) {
-            return res.status(500).json(serviceResult.ServiceResultError("Error Password Encrypt!!!"));
-        } else {
-            const newUser = new User({
-                //_id: new mongoose.Types.ObjectId(),
-                username: req.body.username,
-                password: hash,
-                email: req.body.email,
-                firstName: req.body.firstName,
-                lastName: req.body.lastName
-            });
-            const saveUser = await newUser.save();
-            
-            const token = jwt.sign(
-                {
-                    id: saveUser._id,
-                    username: saveUser.username,
-                    email: saveUser.email,
-                    firstName: saveUser.firstName,
-                    lastName: saveUser.lastName,
-                },
-                process.env.JWTSECRET,
-                {
-                    expiresIn: "1d",
-                }
-            );
-            const responseAuth = new ResponseAuth(saveUser, token);
-            return res.json(serviceResult.ServiceResultSuccess(responseAuth, "User register success."));
-        }
-
-    } catch (error) {
-        console.log(error)
-        return res.status(500).json(serviceResult.ServiceResultError(error.toString()));
-    }
+    const requestModel = new UserRegisterModel(req.body.username, 
+        req.body.password, req.body.email, 
+        req.body.firstName, req.body.lastName);
+    let response = await _userService.UserRegister(requestModel);
+    return res.status(response.statusCode).json(response);
 }
 
 
 const userLogin = async (req, res, next) => {
-
-    const serviceResult = new ServiceResult();
-    try {
-        const email = req.body.email;
-        const existUser = await User.findOne({ email });
-        if (!existUser) {
-            return res.status(401).json(serviceResult.ServiceResultError("Auth failed: Email not found probably", 401));
-        }
-        
-        const matchResult = await bcrypt.compare(req.body.password, existUser.password);
-        if (!matchResult) {
-            //console.log(matchResult)
-            return res.status(401).json(serviceResult.ServiceResultError("Auth failed", 401));
-        }
-        else
-        {
-            const token = jwt.sign(
-                {
-                    id: existUser._id,
-                    username: existUser.username,
-                    email: existUser.email,
-                    firstName: existUser.firstName,
-                    lastName: existUser.lastName,
-                },
-                process.env.JWTSECRET,
-                {
-                    expiresIn: "1d",
-                }
-            );
-            
-            const userDetail = new UserDetail(existUser._id, existUser.username, existUser.email, existUser.firstName, existUser.lastName)
-            const responseAuth = new ResponseAuth(userDetail, token);
-            return res.status(200).json(serviceResult.ServiceResultSuccess(responseAuth));
-        }
-    } catch (error) {
-        console.log(error)
-        return res.status(500).json(serviceResult.ServiceResultError(error.toString()));
-    }
+    const requestModel = new UserLoginModel(req.body.email, req.body.password);
+    let response = await _userService.UserLogin(requestModel);
+    return res.status(response.statusCode).json(response);
 }
 
 
 const userGet = async (req, res) => {
-    const serviceResult = new ServiceResult();
-    try {
-        let userId = req.params.id;
-        const user = await User.findById(userId)
-        return res.status(200).json(serviceResult.ServiceResultSuccess({ user }));
-    } catch (error) {
-        console.log(error)
-        return res.status(500).json(serviceResult.ServiceResultError(error.toString()));
-    }
+    let response = await _userService.UserGetById(req.params.id);
+    return res.status(response.statusCode).json(response);
 }
 
 module.exports = {
@@ -106,3 +64,5 @@ module.exports = {
     userLogin,
     userGet
 };
+
+*/
