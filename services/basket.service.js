@@ -10,7 +10,7 @@ class BasketService {
             let data = await Basket.find({ userId });
             // if(!data)
             //     return new Basket();
-            console.log(data)
+            //console.log(data)
             return serviceResult.ServiceResultSuccess(data);
         }
         catch (error) {
@@ -22,7 +22,7 @@ class BasketService {
     BasketSave = async (basketSaveModel) => {
         const serviceResult = new ServiceResult();
         try {
-            if (!basketSaveModel.id) {
+            if (!basketSaveModel._id) {
                 const newBasket = new Basket({
                     items: basketSaveModel.products, totalQty: basketSaveModel.totalQty,
                     totalPrice: basketSaveModel.totalPrice, userId: basketSaveModel.userId
@@ -31,8 +31,12 @@ class BasketService {
                 return serviceResult.ServiceResultSuccess(saveBasket);
             }
             else {
-                // todo: update
-                //return serviceResult.ServiceResultSuccess(updateBasket);
+                // todo: add business, like control product price and quantity
+                let updateBasket = await Basket.findByIdAndUpdate(basketSaveModel._id, {
+                    items: basketSaveModel.products, totalQty: basketSaveModel.totalQty,
+                    totalPrice: basketSaveModel.totalPrice
+                }, { new: true });
+                return serviceResult.ServiceResultSuccess(updateBasket);
             }
         }
         catch (error) {

@@ -8,7 +8,7 @@ class BasketControllers {
     }
 
     basketGet = async (req, res, next) => {
-        let response = await this._basketService.BasketGetByUserId(req.params.id);
+        let response = await this._basketService.BasketGetByUserId(req.params.user_id);
         return res.status(response.statusCode).json(response);
     }
 

@@ -31,13 +31,11 @@ class CategoryService {
     CategorySave = async (categorySaveModel) => {
         const serviceResult = new ServiceResult();
         try {
+            // we dont need update just insert
             if (!categorySaveModel._id) {
                 const newCategory = new Category({ name: categorySaveModel.name, description: categorySaveModel.description });
                 const saveCategory = await newCategory.save();
                 return serviceResult.ServiceResultSuccess(saveCategory);
-            }
-            else {
-                // todo: update
             }
 
         } catch (error) {
