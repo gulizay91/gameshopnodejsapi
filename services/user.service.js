@@ -38,7 +38,7 @@ class UserService {
                     }
                 );
                 const responseAuth = new ResponseAuth(saveUser, token);
-                return serviceResult.ServiceResultSuccess(responseAuth, "User register success.");
+                return serviceResult.ServiceResultSuccess(responseAuth, 200, "User register success.");
             }
 
         } catch (error) {
