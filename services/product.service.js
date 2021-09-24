@@ -46,7 +46,7 @@ class ProductService {
         try {
             const newProduct = new Product({
                 categoryId: productSaveModel.categoryId,
-                title: rproductSaveModel.title,
+                title: productSaveModel.title,
                 description: productSaveModel.description,
                 price: productSaveModel.price,
                 rating: productSaveModel.rating

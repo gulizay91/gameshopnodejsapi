@@ -16,7 +16,7 @@ class UserService {
             } else {
                 const newUser = new User({
                     //_id: new mongoose.Types.ObjectId(),
-                    username: ruserRegisterModel.username,
+                    username: userRegisterModel.username,
                     password: hash,
                     email: userRegisterModel.email,
                     firstName: userRegisterModel.firstName,
