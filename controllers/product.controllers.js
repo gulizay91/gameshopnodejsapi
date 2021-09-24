@@ -21,7 +21,7 @@ class ProductControllers {
 
     productSave = async (req, res, next) => {
         const requestModel = new ProductSaveModel(req.body.categoryId,
-            req.body.title, req.body.description, req.body.price, req.body.rating);
+            req.body.title, req.body.description, req.body.price, req.body.rating, req.body.imageLogo, req.body.image);
         let response = await this._productService.ProductSave(requestModel);
         return res.status(response.statusCode).json(response);
     }

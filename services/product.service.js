@@ -1,5 +1,6 @@
 const Product = require('../models/entities/product');
 const ServiceResult = require('../models/exchanges/serviceResult');
+const { ResponseProducts } = require('../models/exchanges/product/responseProductList');
 
 class ProductService {
     constructor() { };
@@ -33,7 +34,10 @@ class ProductService {
                 .skip(pageOptions.page * pageOptions.limit)
                 .limit(pageOptions.limit)
                 .exec();
-            return serviceResult.ServiceResultSuccess(products);
+            const productTotalCount = await Product.count(filter);
+            const responseProducts = new ResponseProducts(products, productTotalCount);
+
+            return serviceResult.ServiceResultSuccess(responseProducts);
         } catch (error) {
             console.log(error)
             return serviceResult.ServiceResultError(error.toString());
@@ -49,7 +53,9 @@ class ProductService {
                 title: productSaveModel.title,
                 description: productSaveModel.description,
                 price: productSaveModel.price,
-                rating: productSaveModel.rating
+                rating: productSaveModel.rating,
+                imageLogo: productSaveModel.imageLogo,
+                image: productSaveModel.image
             });
             const saveProduct = await newProduct.save();
             return serviceResult.ServiceResultSuccess(saveProduct);
