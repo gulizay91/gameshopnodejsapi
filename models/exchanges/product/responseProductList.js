@@ -1,6 +1,3 @@
-
-
-
 function ResponseProducts (products, totalCount) {
     this.products = products;
     this.totalCount= totalCount;

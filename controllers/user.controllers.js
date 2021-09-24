@@ -15,7 +15,7 @@ class UserControllers {
     userRegister = async (req, res, next) => {
         const requestModel = new UserRegisterModel(req.body.username,
             req.body.password, req.body.email,
-            req.body.firstName, req.body.lastName);
+            req.body.firstName, req.body.lastName, req.body.phoneNumber);
         let response = await this._userService.UserRegister(requestModel);
         return res.status(response.statusCode).json(response);
     }
@@ -30,6 +30,17 @@ class UserControllers {
         let response = await this._userService.UserGetById(req.params.id);
         return res.status(response.statusCode).json(response);
     }
+
+    // todo: get user address
+    userAddressGet = async (req, res) => {
+        let response = await this._userService.UserAddressGetByUserId(req.params.userId);
+        return res.status(response.statusCode).json(response);
+    }
+
+    // todo: update user
+    // todo: update user address
+    // todo: delete user address
+
 
 }
 

@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/entities/user');
 const ServiceResult = require('../models/exchanges/serviceResult');
 const { ResponseAuth, UserDetail } = require('../models/exchanges/user/responseAuth');
+const { UserAddress, ResponseUserAddress } = require('../models/exchanges/user/responseUserAddress');
 
 class UserService {
     constructor() { };
@@ -20,7 +21,8 @@ class UserService {
                     password: hash,
                     email: userRegisterModel.email,
                     firstName: userRegisterModel.firstName,
-                    lastName: userRegisterModel.lastName
+                    lastName: userRegisterModel.lastName,
+                    phoneNumber: userRegisterModel.phoneNumber
                 });
                 const saveUser = await newUser.save();
 
@@ -76,7 +78,7 @@ class UserService {
                     }
                 );
 
-                const userDetail = new UserDetail(existUser._id, existUser.username, existUser.email, existUser.firstName, existUser.lastName)
+                const userDetail = new UserDetail(existUser._id, existUser.username, existUser.email, existUser.firstName, existUser.lastName, existUser.phoneNumber)
                 const responseAuth = new ResponseAuth(userDetail, token);
                 return serviceResult.ServiceResultSuccess(responseAuth);
             }
@@ -90,7 +92,20 @@ class UserService {
         const serviceResult = new ServiceResult();
         try {
             const user = await User.findById(userId);
-            const userDetail = new UserDetail(user._id, user.username, user.email, user.firstName, user.lastName);
+            const userDetail = new UserDetail(user._id, user.username, user.email, user.firstName, user.lastName, user.phoneNumber);
+            return serviceResult.ServiceResultSuccess(userDetail);
+        } catch (error) {
+            console.log(error)
+            return serviceResult.ServiceResultError(error.toString());
+        }
+    }
+
+    async UserAddressGetByUserId(userId) {
+        const serviceResult = new ServiceResult();
+        try {
+            const filter = userId ? { userId } : {};
+            const userAddress = await UserAddress.find(filter);
+            const userDetail = new ResponseUserAddress(userAddress);
             return serviceResult.ServiceResultSuccess(userDetail);
         } catch (error) {
             console.log(error)
