@@ -1,3 +1,4 @@
+// [Obsolete(use cart)]
 const mongoose = require('mongoose');
 const { ObjectId } = mongoose.Schema;
 
@@ -22,4 +23,4 @@ const basketSchema =  mongoose.Schema({
     totalPrice: { type: Number, default: 0 },
 }, { timestamps: true });
 
-module.exports = mongoose.model('basket', basketSchema);
+module.exports = { BasketItem: mongoose.model('basketItem', basketItemSchema), Basket: mongoose.model('basket', basketSchema) };

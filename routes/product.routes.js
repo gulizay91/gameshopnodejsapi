@@ -5,8 +5,7 @@ const checkAuth = require('../middleware/auth.middleware');
 const ProductControllers = require('../controllers/product.controllers');
 const productControllers = new ProductControllers();
 
-router.get('/:id', productControllers.productGet);
-router.post('/', productControllers.productGetAll);
-router.post('/save', checkAuth, productControllers.productSave);
+router.get('', productControllers.get);
+router.post('', checkAuth, productControllers.post);
 
 module.exports = router;

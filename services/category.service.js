@@ -4,22 +4,24 @@ const ServiceResult = require('../models/exchanges/serviceResult');
 class CategoryService {
     constructor() { };
 
-    CategoryGetById = async (id) => {
-        const serviceResult = new ServiceResult();
-        try {
-            let data = await Category.findById(id);
-            return serviceResult.ServiceResultSuccess(data);
-        }
-        catch (error) {
-            console.log(error)
-            return serviceResult.ServiceResultError(error.toString());
-        }
-    }
+    // CategoryGetById = async (id) => {
+    //     const serviceResult = new ServiceResult();
+    //     try {
+    //         let data = await Category.findById(id);
+    //         return serviceResult.ServiceResultSuccess(data);
+    //     }
+    //     catch (error) {
+    //         console.log(error)
+    //         return serviceResult.ServiceResultError(error.toString());
+    //     }
+    // }
 
-    CategoryGetAll = async () => {
+    CategoryGet = async (query) => {
         const serviceResult = new ServiceResult();
         try {
-            let data = await Category.find({})
+            const { id } = query;
+            const filter = id ? { _id: id } : {};
+            let data = await Category.find(filter);
             return serviceResult.ServiceResultSuccess(data);
         }
         catch (error) {

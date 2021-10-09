@@ -15,4 +15,4 @@ const productSchema =  mongoose.Schema({
     image: { type: String }
 }, { timestamps: true });
 
-module.exports = mongoose.model('product', productSchema);
+module.exports =  { Product: mongoose.model('product', productSchema), ProductSchema: productSchema };

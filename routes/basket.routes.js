@@ -1,10 +1,11 @@
 
+// [Obsolete(use cart)]
 const router = require('express').Router();
 const BasketControllers = require('../controllers/basket.controllers');
 const basketControllers = new BasketControllers();
 
-router.get('/:user_id', basketControllers.basketGet);
-router.post('/save', basketControllers.basketSave);
-router.post('/clear/:id', basketControllers.basketClear);
+router.get('/:userId', basketControllers.get);
+router.post('', basketControllers.post);
+router.delete('/:id', basketControllers.delete);
 
 module.exports = router;

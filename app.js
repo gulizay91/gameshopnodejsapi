@@ -18,7 +18,8 @@ require('./config/config');
 const userRouter = require('./routes/user.routes');
 const categoryRouter = require('./routes/category.routes');
 const productRouter = require('./routes/product.routes');
-const basketRouter = require('./routes/basket.routes');
+//const basketRouter = require('./routes/basket.routes'); // [Obsolete(use cart)]
+const cartRouter = require('./routes/cart.routes');
 
 // Middleware
 app.use(express.json());
@@ -33,7 +34,8 @@ app.use(
 app.use('/users', userRouter);
 app.use('/categories', categoryRouter);
 app.use('/products', productRouter);
-app.use('/baskets', checkAuth, basketRouter);
+//app.use('/baskets', checkAuth, basketRouter); // [Obsolete(use cart)]
+app.use('/carts', checkAuth, cartRouter);
 
 app.use(errorHandling);
 

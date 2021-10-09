@@ -1,39 +1,35 @@
-const Product = require('../models/entities/product');
+const { Product }  = require('../models/entities/product');
 const ServiceResult = require('../models/exchanges/serviceResult');
-const { ResponseProducts } = require('../models/exchanges/product/responseProductList');
+const { ResponseProducts } = require('../models/exchanges/product/responseProduct');
 
 class ProductService {
     constructor() { };
 
-    ProductGetById = async (productId) => {
-
+    ProductGet = async (productGetRequestModel) => {
         const serviceResult = new ServiceResult();
         try {
-            const product = await Product.findById(productId);
-            return serviceResult.ServiceResultSuccess(product);
-        } catch (error) {
-            console.log(error)
-            return serviceResult.ServiceResultError(error.toString());
-        }
-    }
+            const filter = {};
+            const _id = productGetRequestModel.id;
+            const categoryId = productGetRequestModel.categoryId;
 
-    ProductGetAll = async (productListRequestModel) => {
-
-        const serviceResult = new ServiceResult();
-        try {
-            const categoryId = productListRequestModel.categoryId;
-            const filter = categoryId ? { categoryId } : {};
+            if(_id != null)
+                filter = { _id };
+            else if(categoryId)
+                filter = { categoryId };
 
             var pageOptions = {
-                page: parseInt(productListRequestModel.page) - 1 || 0,
-                limit: parseInt(productListRequestModel.limit) || 10
+                page: parseInt(productGetRequestModel.page) - 1 || 0,
+                limit: parseInt(productGetRequestModel.limit) || 10
             }
+
+            // todo: sort
 
             const products = await Product.find(filter)
                 .sort({ title: 1 })
                 .skip(pageOptions.page * pageOptions.limit)
                 .limit(pageOptions.limit)
                 .exec();
+
             const productTotalCount = await Product.count(filter);
             const responseProducts = new ResponseProducts(products, productTotalCount);
 
@@ -45,7 +41,6 @@ class ProductService {
     }
 
     ProductSave = async (productSaveModel) => {
-
         const serviceResult = new ServiceResult();
         try {
             const newProduct = new Product({

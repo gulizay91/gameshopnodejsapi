@@ -31,6 +31,10 @@
       {
         "name": "Categories",
         "description": "API for categories in the system"
+      },
+      {
+        "name": "Carts",
+        "description": "API for carts for each users in the system"
       }
     ],
     "schemes": ["http", "https"],
@@ -39,7 +43,7 @@
 
     "paths": {
         
-        "/users/login": {
+        "/users/signin": {
           "post": {
             "tags": ["Users"],
             "parameters": [{
@@ -49,8 +53,7 @@
               "schema": {
                 "$ref": "#/definitions/LoginUserRequest"
               }
-            }
-          ],
+            }],
             "summary": "User loggin and return token",
             "responses": {
               "200": {
@@ -87,7 +90,7 @@
             }
           }
         },
-        "/users/{id}": {
+        "/users/id": {
           "get": {
             "tags": ["Users"],
             "summary": "Get user by Id",
@@ -110,16 +113,40 @@
             }
           }
         },
-
-        "/products/{id}": {
-          "get": {
-            "tags": ["Products"],
-            "summary": "Get product by Id",
+        "/users": {
+          "put": {
+            "tags": ["Users"],
+            "summary": "Update User",
             "parameters": [
               {
-                "name": "id",
+                "name": "user",
+                "in": "body",
+                "description": "User update",
+                "required": true,
+                "schema": {
+                  "$ref": "#/definitions/UserUpdate"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": {
+                  "$ref": "#/definitions/User"
+                }
+              }
+            }
+          }
+        },
+        "/users/userAddresses/userId": {
+          "get": {
+            "tags": ["Users"],
+            "summary": "Get user's address info by userId",
+            "parameters": [
+              {
+                "name": "userId",
                 "in": "path",
-                "description": "ID of product to fetch",
+                "description": "UserId of userAddress to fetch",
                 "required": true,
                 "type": "string"
               }
@@ -128,25 +155,114 @@
               "200": {
                 "description": "OK",
                 "schema": {
-                  "$ref": "#/definitions/Product"
+                  "$ref": "#/definitions/UserAddresses"
                 }
               }
             }
           }
         },
-        "/products": {
+        "/users/userAddresses": {
           "post": {
+            "tags": ["Users"],
+            "parameters": [{
+              "name": "UserAddress",
+              "in": "body",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/UserAddress"
+              }
+            }],
+            "summary": "Save new userAddress for user",
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": {
+                  "$ref": "#/definitions/UserAddress"
+                }
+              }
+            }
+          }
+        },
+        "/users/userAddresses/": {
+          "put": {
+            "tags": ["Users"],
+            "summary": "Update UserAddress",
+            "parameters": [
+              {
+                "name": "userAddress",
+                "in": "body",
+                "description": "User update",
+                "required": true,
+                "schema": {
+                  "$ref": "#/definitions/UserAddressUpdate"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": {
+                  "$ref": "#/definitions/UserAddress"
+                }
+              }
+            }
+          }
+        },
+        "/users/userAddresses/id": {
+          "delete": {
+            "tags": ["Users"],
+            "parameters": [
+              {
+                "name": "id",
+                "in": "path",
+                "description": "Id of UserAddress to delete",
+                "required": true,
+                "type": "string"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": {
+                  "$ref": "#/definitions/UserAddress"
+                }
+              }
+            }
+          }
+        },
+
+        "/products?id&categoryId&page&limit": {
+          "get": {
             "tags": ["Products"],
             "summary": "Get all products in system",
             "parameters": [
               {
-                "name": "ProductRequest",
-                "in": "body",
-                "description": "Filtered List for Products to fetch",
+                "name": "id",
+                "in": "query",
+                "description": "Id of Product to fetch",
                 "required": false,
-                "schema": {
-                  "$ref": "#/definitions/ProductRequest"
-                }
+                "type": "string"
+              },
+              {
+                "name": "categoryId",
+                "in": "query",
+                "description": "Filtered List for Products by Category",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "name": "page",
+                "in": "query",
+                "description": "The number of items to skip before starting to collect the result set",
+                "required": false,
+                "type": "integer"
+              },
+              {
+                "name": "limit",
+                "in": "query",
+                "description": "The numbers of items to return",
+                "required": false,
+                "type": "integer"
               }
             ],
             "responses": {
@@ -159,9 +275,17 @@
             }
           }
         },
-        "/products/save": {
+        "/products": {
           "post": {
             "tags": ["Products"],
+            "parameters": [{
+              "name": "Product",
+              "in": "body",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/Product"
+              }
+            }],
             "summary": "Save new product",
             "responses": {
               "200": {
@@ -172,9 +296,149 @@
               }
             }
           }
+        },
+
+        "/categories?id": {
+          "get": {
+            "tags": ["Categories"],
+            "summary": "Get all categories in system",
+            "parameters": [
+              {
+                "name": "id",
+                "in": "query",
+                "description": "Id of Product to fetch",
+                "required": false,
+                "type": "string"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": {
+                  "$ref": "#/definitions/Categories"
+                }
+              }
+            }
+          }
+        },
+        "/categories": {
+          "post": {
+            "tags": ["Categories"],
+            "parameters": [{
+              "name": "Category",
+              "in": "body",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/Category"
+              }
+            }],
+            "summary": "Save new category",
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": {
+                  "$ref": "#/definitions/Category"
+                }
+              }
+            }
+          }
+        },
+
+        "/carts/userId": {
+          "get": {
+            "tags": ["Carts"],
+            "summary": "Get user's cart Items in cart",
+            "parameters": [
+              {
+                "name": "userId",
+                "in": "path",
+                "description": "UserId of User to fetch cart",
+                "required": true,
+                "type": "string"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": {
+                  "$ref": "#/definitions/CartItems"
+                }
+              }
+            }
+          }
+        },
+        "/carts": {
+          "post": {
+            "tags": ["Carts"],
+            "parameters": [{
+              "name": "CartItemSave",
+              "in": "body",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/CartItemSave"
+              }
+            }],
+            "summary": "Add/Remove cartItem",
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": {
+                  "$ref": "#/definitions/Cart"
+                }
+              }
+            }
+          }
+        },
+        "/carts?userId&productId": {
+          "delete": {
+            "tags": ["Carts"],
+            "parameters": [
+              {
+                "name": "userId",
+                "in": "query",
+                "description": "UserId of User to delete from cart",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "name": "productId",
+                "in": "query",
+                "description": "ProductId of Products to delete from cart for User's cart",
+                "required": false,
+                "type": "string"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": {
+                  "$ref": "#/definitions/CartItems"
+                }
+              }
+            }
+          }
         }
+
       },
       "definitions": {
+
+        "ServiceResult":{
+          "properties": {
+            "responseMessage": {
+              "type": "string"
+            },
+            "payload": {
+                "type": "object"
+            },
+            "isSucceed": {
+              "type": "string"
+            },
+            "statusCode": {
+                "type": "number"
+            }
+          }
+        },
+
         "User": {
           "required": ["_id"],
           "properties": {
@@ -192,6 +456,9 @@
                 "type": "string"
             },
             "lastName": {
+              "type": "string"
+            },
+            "phoneNumber": {
               "type": "string"
             }
           }
@@ -245,6 +512,98 @@
             }
           }
         },
+        "UserUpdate" :{
+          "required": ["firstName", "lastName", "email"],
+          "properties": {
+            "firstName": {
+                "type": "string"
+            },
+            "lastName": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            },
+            "phoneNumber": {
+              "type": "string"
+            }
+          }
+        },
+
+        "UserAddress": {
+          "required": ["userId", "title", "country", "city", "street", "building"],
+          "properties": {
+            "_id": {
+              "type": "string",
+              "uniqueItems": true
+            },
+            "userId": {
+                "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "building": {
+                "type": "string"
+            },
+            "street": {
+              "type": "string"
+            },
+            "country": {
+              "type": "string"
+            },
+            "city": {
+              "type": "string"
+            }
+          }
+        },
+        "UserAddresses": {
+          "type": "array",
+          "$ref": "#/definitions/UserAddress"
+        },
+        "UserAddressUpdate" :{
+          "required": ["userId", "title", "country", "city", "street"],
+          "properties": {
+            "userId": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "building": {
+                "type": "string"
+            },
+            "street": {
+              "type": "string"
+            },
+            "country": {
+              "type": "string"
+            },
+            "city": {
+              "type": "string"
+            }
+          }
+        },
+
+        "Category": {
+          "required": ["_id"],
+          "properties": {
+            "_id": {
+              "type": "string",
+              "uniqueItems": true
+            },
+            "name": {
+                "type": "string"
+            },
+            "description": {
+                "type": "string"
+            }
+          }
+        },
+        "Categories": {
+          "type": "array",
+          "$ref": "#/definitions/Category"
+        },
 
         "Product": {
           "required": ["_id", "categoryId"],
@@ -267,6 +626,12 @@
             },
             "rating": {
               "type": "number"
+            },
+            "image": {
+              "type": "string"
+            },
+            "imageLog": {
+              "type": "string"
             }
           }
         },
@@ -274,22 +639,86 @@
           "type": "array",
           "$ref": "#/definitions/Product"
         },
-        "ProductRequest": {
-          "required": [""],
+
+        
+        "Cart": {
+          "required": ["_id", "userId, productId"],
           "properties": {
-            "categoryId": {
-                "type": "string"
+            "_id": {
+              "type": "string",
+              "uniqueItems": true
             },
-            "page": {
-              "type": "number",
-              "default": 1
+            "userId": {
+              "type": "string"
             },
-            "limit": {
-              "type": "number",
-              "default": 10
+            "productId": {
+              "type": "string"
+            },
+            "totalQty": {
+              "type": "number"
+            },
+            "totalPrice": {
+              "type": "number"
             }
           }
+        },
+        "Carts": {
+          "type": "array",
+          "$ref": "#/definitions/Cart"
+        },
+        "CartItemSave": {
+          "required": ["userId, productId"],
+          "properties": {
+            "userId": {
+              "type": "string"
+            },
+            "productId": {
+              "type": "string"
+            },
+            "increaseOrDecrease": {
+              "type": "number"
+            }
+          }
+        },
+        "CartItem": {
+          "required": ["_id", "userId, productId"],
+          "properties": {
+            "_id": {
+              "type": "string",
+              "uniqueItems": true
+            },
+            "user": {
+              "type": "string"
+            },
+            "product": {
+              "type": "object",
+              "properties": {
+                "_id": {
+                  "type": "string",
+                  "uniqueItems": true
+                },
+                "title": {
+                  "type": "string"
+                },
+                "price": {
+                  "type": "number"
+                },
+                "image":{
+                  "type":"string"
+                }
+              }
+            },
+            "totalQty": {
+              "type": "number"
+            },
+            "totalPrice": {
+              "type": "number"
+            }
+          }
+        },
+        "CartItems": {
+          "type": "array",
+          "$ref": "#/definitions/CartItem"
         }
-
       }
   }

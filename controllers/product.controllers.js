@@ -1,5 +1,5 @@
 const ProductService = require('../services/product.service');
-const ProductListModel = require('../models/exchanges/product/requestProductList');
+const ProductGetModel = require('../models/exchanges/product/requestProductGet');
 const ProductSaveModel = require('../models/exchanges/product/requestProductSave');
 
 class ProductControllers {
@@ -7,19 +7,15 @@ class ProductControllers {
         this._productService = new ProductService();
     }
 
-    productGet = async (req, res) => {
-        let response = await this._productService.ProductGetById(req.params.id);
+    get = async (req, res) => {
+        const { id, categoryId, page, limit } = req.query;
+        const requestModel = new ProductGetModel(id, categoryId,
+            page, limit);
+        let response = await this._productService.ProductGet(requestModel);
         return res.status(response.statusCode).json(response);
     }
 
-    productGetAll = async (req, res) => {
-        const requestModel = new ProductListModel(req.body.categoryId,
-            req.body.page, req.body.limit);
-        let response = await this._productService.ProductGetAll(requestModel);
-        return res.status(response.statusCode).json(response);
-    }
-
-    productSave = async (req, res, next) => {
+    post = async (req, res, next) => {
         const requestModel = new ProductSaveModel(req.body.categoryId,
             req.body.title, req.body.description, req.body.price, req.body.rating, req.body.imageLogo, req.body.image);
         let response = await this._productService.ProductSave(requestModel);

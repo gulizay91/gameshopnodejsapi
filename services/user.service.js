@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/entities/user');
 const ServiceResult = require('../models/exchanges/serviceResult');
 const { ResponseAuth, UserDetail } = require('../models/exchanges/user/responseAuth');
-const { UserAddress, ResponseUserAddress } = require('../models/exchanges/user/responseUserAddress');
 
 class UserService {
     constructor() { };
@@ -100,19 +99,23 @@ class UserService {
         }
     }
 
-    async UserAddressGetByUserId(userId) {
+    async UserUpdate(userUpdateModel) {
         const serviceResult = new ServiceResult();
         try {
-            const filter = userId ? { userId } : {};
-            const userAddress = await UserAddress.find(filter);
-            const userDetail = new ResponseUserAddress(userAddress);
-            return serviceResult.ServiceResultSuccess(userDetail);
+            const existUser = await User.findByIdAndUpdate(userUpdateModel._id,
+                { $set: { 
+                    firstName: userUpdateModel.firstName,
+                    lastName: userUpdateModel.lastName,
+                    email: userUpdateModel.email,
+                    phoneNumber: userUpdateModel.phoneNumber
+                  } 
+                }, { new: true });
+            return serviceResult.ServiceResultSuccess(existUser);
         } catch (error) {
             console.log(error)
             return serviceResult.ServiceResultError(error.toString());
         }
     }
-
 }
 
 module.exports = UserService;
