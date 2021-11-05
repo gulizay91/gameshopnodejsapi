@@ -73,7 +73,7 @@ class CartService {
     CartClearByUserId = async (userId, productId) => {
         const serviceResult = new ServiceResult();
         try {
-            const filter = { user: userId };
+            let filter = { user: userId };
             if(productId)
                 filter = { user: userId, product: productId };
 
