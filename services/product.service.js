@@ -8,7 +8,7 @@ class ProductService {
     ProductGet = async (productGetRequestModel) => {
         const serviceResult = new ServiceResult();
         try {
-            const filter = {};
+            let filter = {};
             const _id = productGetRequestModel.id;
             const categoryId = productGetRequestModel.categoryId;
 
