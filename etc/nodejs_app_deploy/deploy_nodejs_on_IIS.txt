@@ -1,0 +1,15 @@
+1 - Install Node.js on Windows Server
+2 - Copy Node.js application files to path on server
+3 - Create a website on IIS for our Node.js application
+4 - Configure the reverse proxy on IIS
+5 - Project directory open cmd
+	* npm install pm2@latest -g
+	* pm2 start app.js
+or
+5 - Create a Windows Service to run our Node.js application automatically
+
+
+source:
+https://medium.com/@harshamw/deploying-a-node-js-application-in-iis-using-a-reverse-proxy-process-management-using-pm2-3d59b83d7f76
+
+https://alex.domenici.net/archive/deploying-a-node-js-application-on-windows-iis-using-a-reverse-proxy
